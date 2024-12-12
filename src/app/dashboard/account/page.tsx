@@ -1,29 +1,38 @@
 "use client";
 import Image from "next/image";
 import TableComponent from "../../../components/tableComponent";
-import HeaderComponent from "../../../components/headerComponent";
 import useAccount from "./useAccount";
+import ModalDelete from "./modal/ModalDelete";
+import LoadingModal from "./modal/LoadingModal";
 
 export default function Account() {
   const {
     columns,
     rows,
     isShow,
-    qr,
     formData,
-    handleSetQr,
+    scan,
+    dataDelete,
+    deleteModal,
+    setDeleteModal,
+    handleResetScan,
+    handleDeleteClick,
     handleChange,
     handleSubmit,
   } = useAccount();
 
   return (
-    <main className="py-8 flex flex-col gap-4 ">
+    <main className="py-8 flex flex-col gap-4 h-full">
       <div>
         <label htmlFor="form-modal" className="btn btn-success text-white">
           Add Account
         </label>
       </div>
-      <TableComponent columns={columns} rows={rows} />
+      {rows.isLoading ? (
+        <div className="skeleton h-96 mr-28"></div>
+      ) : (
+        <TableComponent columns={columns} rows={rows.data} />
+      )}
 
       {/* The button to open modal */}
 
@@ -31,10 +40,26 @@ export default function Account() {
       <input type="checkbox" id="my_modal_7" className="modal-toggle" />
       <div className="modal" role="dialog">
         <div className="modal-box">
-          {qr && <Image src={qr} alt="QR Code" width={600} height={600} />}
+          {scan.isLoading ? (
+            <h4 className="text-center text-2xl">Loading...</h4>
+          ) : scan.data?.qr ? (
+            <div className="flex flex-col items-center">
+              <h4 className="text-2xl font-bold">Scan Here!</h4>
+              <Image
+                src={scan.data.qr}
+                alt="QR Code"
+                width={600}
+                height={600}
+              />
+            </div>
+          ) : (
+            <h4 className="text-2xl font-bold text-center">
+              {scan.data?.message}
+            </h4>
+          )}
         </div>
         <label
-          onClick={() => handleSetQr("")}
+          onClick={handleResetScan}
           className="modal-backdrop"
           htmlFor="my_modal_7"
         >
@@ -71,13 +96,18 @@ export default function Account() {
           </div>
         </div>
         <label
-          onClick={() => handleSetQr("")}
+          onClick={handleResetScan}
           className="modal-backdrop"
           htmlFor="form-modal"
         >
           Close
         </label>
       </div>
+      {rows.isLoadingAction && <LoadingModal />}
+      <ModalDelete
+        onClick={() => dataDelete?.id && handleDeleteClick(dataDelete?.id)}
+        dataDelete={dataDelete}
+      />
     </main>
   );
 }

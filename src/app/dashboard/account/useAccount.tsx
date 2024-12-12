@@ -1,6 +1,15 @@
 "use client";
 
+import {
+  addAccount,
+  deleteAccountById,
+  getAccounts,
+} from "@/lib/features/accountsSlice";
+import { resetScan, scanBlast } from "@/lib/features/blastSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import axiosInstance from "@/services/axiosInstance";
+import { AccountAddRequest, AccountTypes } from "@/types/accountTypes";
+import { ScanBlatsResponse } from "@/types/blastTypes";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -15,23 +24,15 @@ const initialFormData = {
 };
 
 const useAccount = () => {
-  const [rows, setRows] = useState<any[]>();
+  const rows = useAppSelector((state) => state.accounts);
+  const scan = useAppSelector((state) => state.blast);
   const [isShow, setIsShow] = useState<boolean>();
-  const [qr, setQr] = useState<string>("");
-  const [formData, setFormData] = useState<FormDataTypes>(initialFormData);
-  const getAccounts = async () => {
-    try {
-      const response = await axios.get("/api/accounts");
-
-      setRows(response.data.data);
-    } catch (error) {}
-  };
-
-  const postAccount = async () => {
-    try {
-      const response = await axios.post("/api/accounts");
-    } catch (error) {}
-  };
+  const [formData, setFormData] = useState<AccountAddRequest>(initialFormData);
+  const [dataDelete, setDataDelete] = useState<AccountTypes>();
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
+  const [addModal, setAddModal] = useState<boolean>(false);
+  const [scanModal, setScanModal] = useState<boolean>(false);
+  const dispacth = useAppDispatch();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -46,26 +47,37 @@ const useAccount = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("/api/accounts", formData);
+      await dispacth(addAccount(formData));
       setFormData(initialFormData);
-      await getAccounts();
     } catch (error) {
       console.log("error: ", error);
     }
-  };
-
-  const handleSetQr = (qr: string) => {
-    setQr(qr);
   };
 
   const handleScanClick = async (phone: string) => {
     try {
-      const response = await axios.post("/api/blast/scan", { number: phone });
-      console.log(response.data.qr);
-      setQr(response.data.qr);
+      dispacth(scanBlast(phone));
     } catch (error) {
       console.log("error: ", error);
     }
+  };
+
+  const handleDeleteModal = (item: AccountTypes) => {
+    setDeleteModal(true);
+    setDataDelete(item);
+  };
+
+  const handleDeleteClick = async (id: number) => {
+    try {
+      await dispacth(deleteAccountById(1111));
+      setDeleteModal(false);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const handleResetScan = () => {
+    dispacth(resetScan());
   };
 
   const columns = [
@@ -80,28 +92,41 @@ const useAccount = () => {
       key: "action",
       name: "Action",
       render: (item: any) => (
-        <label
-          htmlFor="my_modal_7"
-          onClick={() => handleScanClick(item.phoneNumber)}
-          className="btn btn-success text-white"
-        >
-          Scan
-        </label>
+        <div className="flex flex-row gap-4">
+          <label
+            htmlFor="my_modal_7"
+            onClick={() => handleScanClick(item.phoneNumber)}
+            className="btn btn-success text-white"
+          >
+            Scan
+          </label>
+          <label
+            htmlFor="delete-modal"
+            onClick={() => handleDeleteModal(item)}
+            className="btn bg-red-600 text-white"
+          >
+            Delete
+          </label>
+        </div>
       ),
     },
   ];
 
   useEffect(() => {
-    getAccounts();
-  }, []);
+    dispacth(getAccounts());
+  }, [dispacth]);
 
   return {
     columns,
     rows,
     isShow,
-    qr,
     formData,
-    handleSetQr,
+    scan,
+    dataDelete,
+    deleteModal,
+    setDeleteModal,
+    handleResetScan,
+    handleDeleteClick,
     handleChange,
     handleSubmit,
   };
