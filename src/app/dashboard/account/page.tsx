@@ -3,7 +3,7 @@ import Image from "next/image";
 import TableComponent from "../../../components/tableComponent";
 import useAccount from "./useAccount";
 import ModalDelete from "./modal/ModalDelete";
-import LoadingModal from "./modal/LoadingModal";
+import LoadingModal from "@/components/modal/LoadingModal";
 
 export default function Account() {
   const {

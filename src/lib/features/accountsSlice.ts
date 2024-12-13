@@ -2,13 +2,19 @@ import { AccountAddRequest, AccountTypes } from "@/types/accountTypes";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+interface GetAccountsParams {
+  name?: string;
+  phoneNumber?: string;
+  isActive?: boolean;
+}
+
 export const getAccounts = createAsyncThunk(
   "accounts/getAccounts",
-  async () => {
-    try {
-      const response = await axios.get("/api/accounts");
-      return response.data.data;
-    } catch (error) {}
+  async (params: GetAccountsParams | undefined) => {
+    const response = await axios.get("/api/accounts", {
+      params: params,
+    });
+    return response.data.data;
   }
 );
 export const addAccount = createAsyncThunk(
