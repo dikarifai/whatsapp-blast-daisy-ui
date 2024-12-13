@@ -48,6 +48,7 @@ const SendMessage: React.FC = () => {
         ></textarea>
         <button
           onClick={handleSend}
+          disabled={!sendForm.message || !sendForm.account || !sendForm.number}
           className="btn btn-success text-white w-full max-w-xl"
         >
           Send
