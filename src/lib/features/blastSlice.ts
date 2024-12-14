@@ -1,4 +1,5 @@
 import { ScanBlatsResponse } from "@/types/blastTypes";
+import { textAreaSplitUtil } from "@/utils/textAreaSplitUtil";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -7,6 +8,7 @@ interface SendMessageTypes {
   account: string;
   number: string;
   message: string;
+  numbers: string;
 }
 
 export const scanBlast = createAsyncThunk(
@@ -21,11 +23,15 @@ export const scanBlast = createAsyncThunk(
     } catch (error) {}
   }
 );
+
 export const sendMessage = createAsyncThunk(
   "blast/sendMessage",
   async (data: SendMessageTypes, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/blast/send-message", data);
+      const response = await axios.post("/api/blast/send-message", {
+        ...data,
+        numbers: undefined,
+      });
       return response.data;
     } catch (error: any) {
       if (!error.response) {
@@ -37,10 +43,28 @@ export const sendMessage = createAsyncThunk(
   }
 );
 
+export const blastMessage = createAsyncThunk(
+  "blast/blastMessage",
+  async (data: SendMessageTypes, { rejectWithValue }) => {
+    const numbers = textAreaSplitUtil(data.numbers);
+    try {
+      const response = await axios.post("/api/blast/blast-message", {
+        ...data,
+        number: undefined,
+        numbers: numbers,
+      });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const initialSendForm = {
   account: "",
   number: "",
   message: "",
+  numbers: "",
 };
 
 const initialState = {
@@ -93,6 +117,37 @@ export const blastSlice = createSlice({
       state.sendForm = initialSendForm;
     });
     builder.addCase(sendMessage.rejected, (state, action) => {
+      const payload: any = action.payload;
+
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: payload.data.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      state.isLoadingAction = false;
+    });
+
+    //BLAST MESSAGE
+    builder.addCase(blastMessage.pending, (state) => {
+      state.isLoadingAction = true;
+    });
+    builder.addCase(blastMessage.fulfilled, (state, action) => {
+      state.data = action.payload;
+      state.isLoadingAction = false;
+
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: action.payload.message || "Success",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      state.sendForm = initialSendForm;
+    });
+    builder.addCase(blastMessage.rejected, (state, action) => {
       const payload: any = action.payload;
 
       Swal.fire({
