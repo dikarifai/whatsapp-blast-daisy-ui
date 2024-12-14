@@ -23,13 +23,13 @@ export default function Account() {
 
   return (
     <main className="py-8 flex flex-col gap-4 h-full">
-      <div>
+      <div className="max-md:px-8">
         <label htmlFor="form-modal" className="btn btn-success text-white">
           Add Account
         </label>
       </div>
       {rows.isLoading ? (
-        <div className="skeleton h-96 mr-28"></div>
+        <div className="skeleton h-96 mr-28 w-full"></div>
       ) : (
         <TableComponent columns={columns} rows={rows.data} />
       )}

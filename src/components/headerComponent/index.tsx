@@ -5,7 +5,7 @@ interface HeaderProps {
 const HeaderComponent: React.FC<HeaderProps> = ({ title }) => {
   return (
     <div className="flex flex-col border-b-2 border-slate-400 p-5 text-4xl">
-      <div>{title}</div>
+      {title ? <div>{title}</div> : <div className="skeleton h-10 w-40"></div>}
       <div className="breadcrumbs text-sm">
         <ul>
           <li>

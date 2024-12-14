@@ -10,7 +10,7 @@ interface TableProps {
 
 const TableComponent: React.FC<TableProps> = ({ columns, rows }) => {
   return (
-    <div className="overflow-x-auto w-full">
+    <div className="overflow-x-auto w-full max-md:w-screen">
       <table className="table">
         {/* head */}
         <thead>
