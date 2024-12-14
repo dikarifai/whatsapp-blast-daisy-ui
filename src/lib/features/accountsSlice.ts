@@ -1,4 +1,5 @@
 import { AccountAddRequest, AccountTypes } from "@/types/accountTypes";
+import { errorAlert, successAlert } from "@/utils/alertUtil";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -19,23 +20,25 @@ export const getAccounts = createAsyncThunk(
 );
 export const addAccount = createAsyncThunk(
   "accounts/addAccount",
-  async (data: AccountAddRequest) => {
+  async (data: AccountAddRequest, { rejectWithValue }) => {
     try {
       const response = await axios.post("/api/accounts", data);
-      getAccounts();
       return response.data.data;
-    } catch (error) {}
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const deleteAccountById = createAsyncThunk(
   "accounts/deleteAccountById",
-  async (id: number) => {
+  async (id: number, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`/api/accoun/${id}`);
-      getAccounts();
+      const response = await axios.delete(`/api/accounts/${id}`);
       return response.data.data;
-    } catch (error) {}
+    } catch (error: any) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -68,11 +71,12 @@ export const accountsSlice = createSlice({
     });
     builder.addCase(addAccount.fulfilled, (state, action) => {
       state.isLoadingAction = false;
-      console.log("success: ", action.payload);
+      successAlert(action.payload.message || "Delete Success");
     });
     builder.addCase(addAccount.rejected, (state, action) => {
+      const payload: any = action.payload;
       state.isLoadingAction = false;
-      console.log("error", action.error.message);
+      errorAlert(payload.data.message);
     });
     //DELETE Account BY ID
     builder.addCase(deleteAccountById.pending, (state) => {
@@ -80,11 +84,12 @@ export const accountsSlice = createSlice({
     });
     builder.addCase(deleteAccountById.fulfilled, (state, action) => {
       state.isLoadingAction = false;
-      console.log("success: ", action.payload);
+      successAlert(action.payload.message || "Delete Success");
     });
     builder.addCase(deleteAccountById.rejected, (state, action) => {
+      const payload: any = action.payload;
       state.isLoadingAction = false;
-      console.log("error: ", action.error);
+      errorAlert(payload.data.message);
     });
   },
 });

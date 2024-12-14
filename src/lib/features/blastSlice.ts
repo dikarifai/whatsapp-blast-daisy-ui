@@ -1,4 +1,5 @@
 import { ScanBlatsResponse } from "@/types/blastTypes";
+import { errorAlert, successAlert } from "@/utils/alertUtil";
 import { textAreaSplitUtil } from "@/utils/textAreaSplitUtil";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
@@ -137,26 +138,13 @@ export const blastSlice = createSlice({
     builder.addCase(blastMessage.fulfilled, (state, action) => {
       state.data = action.payload;
       state.isLoadingAction = false;
-
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: action.payload.message || "Success",
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      successAlert(action.payload.message);
       state.sendForm = initialSendForm;
     });
     builder.addCase(blastMessage.rejected, (state, action) => {
       const payload: any = action.payload;
 
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: payload.data.message,
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      errorAlert(payload.data.message);
 
       state.isLoadingAction = false;
     });

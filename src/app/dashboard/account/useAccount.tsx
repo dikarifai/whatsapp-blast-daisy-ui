@@ -49,6 +49,7 @@ const useAccount = () => {
     try {
       await dispacth(addAccount(formData));
       setFormData(initialFormData);
+      await dispacth(getAccounts());
     } catch (error) {
       console.log("error: ", error);
     }
@@ -68,12 +69,8 @@ const useAccount = () => {
   };
 
   const handleDeleteClick = async (id: number) => {
-    try {
-      await dispacth(deleteAccountById(1111));
-      setDeleteModal(false);
-    } catch (error) {
-      console.log("error", error);
-    }
+    await dispacth(deleteAccountById(id));
+    await dispacth(getAccounts());
   };
 
   const handleResetScan = () => {
