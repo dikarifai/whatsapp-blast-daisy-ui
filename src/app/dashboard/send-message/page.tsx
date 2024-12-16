@@ -73,6 +73,12 @@ const SendMessage: React.FC = () => {
             ></textarea>
           )}
         </div>
+        <input
+          type="file"
+          name="image"
+          className="file-input file-input-bordered w-full max-w-xl"
+          onChange={(e) => handleChange(e)}
+        />
         <textarea
           value={sendForm.message}
           className="textarea textarea-bordered w-full max-w-xl"

@@ -35,8 +35,6 @@ const useSendMessage = () => {
     setRadioValue(value);
   };
 
-  const handleChangeNummbers = () => {};
-
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement

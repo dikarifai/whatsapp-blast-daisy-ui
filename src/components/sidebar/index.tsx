@@ -55,16 +55,18 @@ const Sidebar: React.FC<SidebarProps> = ({ className, setTitle, name }) => {
         onClick={() => setIsActive(false)}
         className={`${
           isActive
-            ? "fixed top-0 left-0 w-full h-screen z-50 bg-black bg-opacity-50"
+            ? "fixed top-0 left-0 w-full h-screen z-40 bg-black bg-opacity-50"
             : "hidden"
         }`}
       >
         test
       </div>
       <div
-        className={`menu w-full h-full max-md:${
-          isActive ? "" : "hidden"
-        } max-md:fixed max-md:top-0 max-md:left-0 max-md:bg-green-500 z-50 max-md:w-4/6`}
+        className={`menu ${
+          isActive
+            ? "max-md:fixed top-0 left-0 w-full h-screen "
+            : "max-md:hidden"
+        } max-md:bg-green-500 z-50 max-md:w-4/6`}
       >
         <h2 className="text-2xl text-center w-full">WHATSAPP BLAST {index}</h2>
         <h2 className="text-2xl w-full">Selamat Datang {name}</h2>
