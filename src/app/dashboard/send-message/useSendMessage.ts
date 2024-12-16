@@ -17,6 +17,7 @@ const useSendMessage = () => {
   const [radioValue, setRadioValue] = useState<"send" | "blast" | string>(
     "send"
   );
+  const [inputFile, setInputFile] = useState<File | undefined>();
 
   const radioItems = [
     {
@@ -40,15 +41,30 @@ const useSendMessage = () => {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    const { name, value } = e.target;
-    const form = { ...sendForm, [name]: value };
-    dispatch(setSendForm(form));
+    const { name, value, type } = e.target;
+    const { files } = e.target as HTMLInputElement;
+
+    if (type === "file") {
+      setInputFile(files?.[0]);
+    } else {
+      const form = { ...sendForm, [name]: value };
+      dispatch(setSendForm(form));
+    }
   };
 
   const handleSend = async () => {
-    radioValue === "send"
-      ? dispatch(sendMessage(sendForm))
-      : dispatch(blastMessage(sendForm));
+    const form = new FormData();
+
+    form.append("account", sendForm.account);
+    form.append("message", sendForm.message);
+    inputFile && form.append("image", inputFile);
+    if (radioValue === "send") {
+      form.append("number", sendForm.number);
+      dispatch(sendMessage(form));
+    } else {
+      form.append("numbers", sendForm.numbers);
+      dispatch(blastMessage(form));
+    }
   };
 
   useEffect(() => {

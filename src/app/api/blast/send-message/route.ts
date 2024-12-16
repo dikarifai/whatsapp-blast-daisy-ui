@@ -3,7 +3,9 @@ import { errorUtil } from "@/utils/errorUtil";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const data = await request.json();
+  const data = await request.formData();
+  console.log("data send: ", data);
+
   try {
     const response = await axiosInstance.post("/blast/send-message", data);
 

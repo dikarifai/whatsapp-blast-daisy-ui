@@ -27,12 +27,9 @@ export const scanBlast = createAsyncThunk(
 
 export const sendMessage = createAsyncThunk(
   "blast/sendMessage",
-  async (data: SendMessageTypes, { rejectWithValue }) => {
+  async (data: FormData, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/blast/send-message", {
-        ...data,
-        numbers: undefined,
-      });
+      const response = await axios.post("/api/blast/send-message", data);
       return response.data;
     } catch (error: any) {
       if (!error.response) {
@@ -46,14 +43,9 @@ export const sendMessage = createAsyncThunk(
 
 export const blastMessage = createAsyncThunk(
   "blast/blastMessage",
-  async (data: SendMessageTypes, { rejectWithValue }) => {
-    const numbers = textAreaSplitUtil(data.numbers);
+  async (data: FormData, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/blast/blast-message", {
-        ...data,
-        number: undefined,
-        numbers: numbers,
-      });
+      const response = await axios.post("/api/blast/blast-message", data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -61,7 +53,7 @@ export const blastMessage = createAsyncThunk(
   }
 );
 
-const initialSendForm = {
+const initialSendForm: SendMessageTypes = {
   account: "",
   number: "",
   message: "",
@@ -72,7 +64,7 @@ const initialState = {
   isLoading: true,
   isLoadingAction: false,
   data: {} as ScanBlatsResponse,
-  sendForm: initialSendForm as SendMessageTypes,
+  sendForm: initialSendForm,
 };
 
 export const blastSlice = createSlice({
@@ -84,6 +76,7 @@ export const blastSlice = createSlice({
     },
     setSendForm: (state, action) => {
       state.sendForm = action.payload;
+      console.log("Form: ", state.sendForm);
     },
   },
   extraReducers: (builder) => {
