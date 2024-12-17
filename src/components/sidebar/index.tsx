@@ -5,18 +5,29 @@ import useSidebar from "./useSidebar";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FaBars } from "react-icons/fa";
+import axios from "axios";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { logout } from "@/lib/features/authSlice";
+import LoadingModal from "../modal/LoadingModal";
 
 interface SidebarProps {
   className?: React.HTMLElementType | string;
   setTitle?: Dispatch<SetStateAction<string>>;
-  name: React.ReactNode;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ className, setTitle, name }) => {
+const Sidebar: React.FC<SidebarProps> = ({ className, setTitle }) => {
+  const dispatch = useAppDispatch();
+  const auth = useAppSelector((item) => item.auth);
   const { sidebarItems } = useSidebar();
+  const router = useRouter();
   const pathname = usePathname();
   const [index, setIndex] = useState<number>();
   const [isActive, setIsActive] = useState<boolean>(false);
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+    router.replace("/login");
+  };
 
   useEffect(() => {
     console.log("item path: ", sidebarItems[0].path.split("/"));
@@ -58,32 +69,42 @@ const Sidebar: React.FC<SidebarProps> = ({ className, setTitle, name }) => {
             ? "fixed top-0 left-0 w-full h-screen z-40 bg-black bg-opacity-50"
             : "hidden"
         }`}
-      >
-        test
-      </div>
+      ></div>
       <div
         className={`menu ${
           isActive
-            ? "max-md:fixed top-0 left-0 w-full h-screen "
+            ? "max-md:fixed top-0 left-0 w-full h-screen flex flex-col justify-between p-0 pb-8"
             : "max-md:hidden"
         } max-md:bg-green-500 z-50 max-md:w-4/6`}
       >
-        <h2 className="text-2xl text-center w-full">WHATSAPP BLAST {index}</h2>
-        <h2 className="text-2xl w-full">Selamat Datang {name}</h2>
-        <ul className=" p-4 text-white">
-          {/* Sidebar content here */}
-          {sidebarItems.map((item) => (
-            <li className="text-xl" key={item.key}>
-              <Link
-                onClick={() => setTitle && setTitle(item.name)}
-                href={`/dashboard/${item.path}`}
-              >
-                {item.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div>
+          <h2 className="text-2xl text-center w-full p-5 bg-green-200">
+            WHATSAPP BLAST
+          </h2>
+          <ul className=" p-4 text-white">
+            {/* Sidebar content here */}
+            {sidebarItems.map((item) => (
+              <li className="text-xl" key={item.key}>
+                <Link
+                  onClick={() => setTitle && setTitle(item.name)}
+                  href={`/dashboard/${item.path}`}
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex justify-center">
+          <button
+            onClick={handleLogout}
+            className="btn btn-error text-white w-72"
+          >
+            Log Out
+          </button>
+        </div>
       </div>
+      {auth.isLoading && <LoadingModal />}
     </div>
   );
 };

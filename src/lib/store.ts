@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import accountsReducer from "./features/accountsSlice";
 import blastReducer from "./features/blastSlice";
+import authReducer from "./features/authSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       accounts: accountsReducer,
       blast: blastReducer,
+      auth: authReducer,
     },
   });
 };

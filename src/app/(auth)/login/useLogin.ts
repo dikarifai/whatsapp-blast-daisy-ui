@@ -1,9 +1,13 @@
+import { login } from "@/lib/features/authSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import axiosInstance from "@/services/axiosInstance";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 const useLogin = () => {
+  const dispatch = useAppDispatch();
+  const auth = useAppSelector((item) => item.auth);
   const [username, setUsername] = useState<string>("");
   const [password, setPasword] = useState<string>("");
   const pathname = usePathname();
@@ -23,12 +27,8 @@ const useLogin = () => {
 
   const handleLogin = async () => {
     try {
-      const data = {
-        username: username,
-        password: password,
-      };
-      const response = await axios.post(`/api/auth/login`, data);
-      setCookie("token", response.data.token, 7);
+      const data = { username: username, password: password };
+      await dispatch(login(data));
       if (pathname === "/login") {
         route.push("/");
       }
@@ -38,7 +38,7 @@ const useLogin = () => {
     }
   };
 
-  return { username, password, setUsername, setPasword, handleLogin };
+  return { username, password, setUsername, setPasword, handleLogin, auth };
 };
 
 export default useLogin;

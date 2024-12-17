@@ -1,9 +1,10 @@
 "use client";
 
+import LoadingModal from "@/components/modal/LoadingModal";
 import useLogin from "./useLogin";
 
 const Login = () => {
-  const { username, password, handleLogin, setPasword, setUsername } =
+  const { username, password, handleLogin, setPasword, setUsername, auth } =
     useLogin();
 
   return (
@@ -43,6 +44,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+      {auth.isLoading && <LoadingModal />}
     </main>
   );
 };
