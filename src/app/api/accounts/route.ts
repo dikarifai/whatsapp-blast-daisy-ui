@@ -3,8 +3,12 @@ import { errorUtil } from "@/utils/errorUtil";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
+  const { search } = new URL(request.url);
+
+  const url = `/accounts${search}`;
+
   try {
-    const response = await axiosInstance.get("/accounts");
+    const response = await axiosInstance.get(url);
 
     return NextResponse.json(response.data);
   } catch (error) {

@@ -29,10 +29,10 @@ const LayoutComponent: React.FC<LayoutProps> = ({ children }) => {
     getUser();
   }, []);
   return (
-    <div className="grid grid-cols-5">
-      <Sidebar setTitle={setTittle} name={name} />
-      <div className="col-span-4 flex flex-col">
-        <HeaderComponent title={tittle} />
+    <div className="grid md:grid-cols-3 xl:grid-cols-5">
+      <Sidebar setTitle={setTittle} />
+      <div className="col-span-2 xl:col-span-4 flex flex-col relative md:px-8">
+        <HeaderComponent title={tittle} name={name} />
         {children}
       </div>
     </div>
