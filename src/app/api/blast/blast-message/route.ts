@@ -3,7 +3,7 @@ import { errorUtil } from "@/utils/errorUtil";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const data = await request.json();
+  const data = await request.formData();
   console.log("Blast Data: ", data);
 
   try {
