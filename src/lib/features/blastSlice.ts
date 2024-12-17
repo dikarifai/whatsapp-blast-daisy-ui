@@ -10,6 +10,7 @@ interface SendMessageTypes {
   number: string;
   message: string;
   numbers: string;
+  filePath: string;
 }
 
 export const scanBlast = createAsyncThunk(
@@ -58,6 +59,7 @@ const initialSendForm: SendMessageTypes = {
   number: "",
   message: "",
   numbers: "",
+  filePath: "",
 };
 
 const initialState = {

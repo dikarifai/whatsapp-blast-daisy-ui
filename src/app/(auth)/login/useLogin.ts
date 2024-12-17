@@ -33,10 +33,7 @@ const useLogin = () => {
         route.push("/");
       }
       route.push(pathname);
-      console.log("resp: ", response);
     } catch (error) {
-      console.log("Ini Error");
-
       console.log("error", error);
     }
   };

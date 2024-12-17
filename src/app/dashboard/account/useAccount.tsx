@@ -42,7 +42,6 @@ const useAccount = () => {
       ...prevData,
       [name]: value,
     }));
-    console.log(formData);
   };
 
   const handleSubmit = async () => {

@@ -46,10 +46,9 @@ const useSendMessage = () => {
 
     if (type === "file") {
       setInputFile(files?.[0]);
-    } else {
-      const form = { ...sendForm, [name]: value };
-      dispatch(setSendForm(form));
     }
+    const form = { ...sendForm, [name]: value };
+    dispatch(setSendForm(form));
   };
 
   const handleSend = async () => {
@@ -58,12 +57,17 @@ const useSendMessage = () => {
     form.append("account", sendForm.account);
     form.append("message", sendForm.message);
     inputFile && form.append("image", inputFile);
-    if (radioValue === "send") {
-      form.append("number", sendForm.number);
-      dispatch(sendMessage(form));
-    } else {
-      form.append("numbers", sendForm.numbers);
-      dispatch(blastMessage(form));
+    try {
+      if (radioValue === "send") {
+        form.append("number", sendForm.number);
+        dispatch(sendMessage(form));
+      } else {
+        form.append("numbers", sendForm.numbers);
+        dispatch(blastMessage(form));
+      }
+      setInputFile(undefined);
+    } catch (error) {
+      console.log("error send: ", error);
     }
   };
 
@@ -77,6 +81,7 @@ const useSendMessage = () => {
     sendForm,
     radioItems,
     radioValue,
+    inputFile,
     handleChange,
     handleChangeRadio,
     handleSend,

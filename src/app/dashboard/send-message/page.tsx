@@ -10,6 +10,7 @@ const SendMessage: React.FC = () => {
     sendForm,
     radioItems,
     radioValue,
+    inputFile,
     handleChange,
     handleChangeRadio,
     handleSend,
@@ -75,9 +76,10 @@ const SendMessage: React.FC = () => {
         </div>
         <input
           type="file"
-          name="image"
+          name="filePath"
           className="file-input file-input-bordered w-full max-w-xl"
           onChange={(e) => handleChange(e)}
+          value={sendForm.filePath}
         />
         <textarea
           value={sendForm.message}

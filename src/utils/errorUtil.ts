@@ -2,8 +2,10 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export const errorUtil = async (error: any) => {
-  const data = error.response.data;
-  const status = error.status;
+  console.log("error: ", error);
+
+  const data = error.response.data || error.message;
+  const status = error.status || 500;
 
   if (error.status === 401) {
     const cookie = await cookies();
