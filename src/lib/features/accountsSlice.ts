@@ -71,7 +71,7 @@ export const accountsSlice = createSlice({
     });
     builder.addCase(addAccount.fulfilled, (state, action) => {
       state.isLoadingAction = false;
-      successAlert(action.payload.message || "Delete Success");
+      successAlert(action.payload.message);
     });
     builder.addCase(addAccount.rejected, (state, action) => {
       const payload: any = action.payload;
@@ -84,7 +84,7 @@ export const accountsSlice = createSlice({
     });
     builder.addCase(deleteAccountById.fulfilled, (state, action) => {
       state.isLoadingAction = false;
-      successAlert(action.payload.message || "Delete Success");
+      successAlert(action.payload.message);
     });
     builder.addCase(deleteAccountById.rejected, (state, action) => {
       const payload: any = action.payload;

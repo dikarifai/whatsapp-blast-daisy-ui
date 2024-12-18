@@ -58,7 +58,7 @@ const SendMessage: React.FC = () => {
             <input
               value={sendForm.number}
               type="text"
-              placeholder="Number for sended"
+              placeholder="Number to receive messages"
               className="input input-bordered w-full max-w-md"
               name="number"
               onChange={(e) => handleChange(e)}
@@ -67,7 +67,7 @@ const SendMessage: React.FC = () => {
             <textarea
               value={sendForm.numbers}
               className="textarea textarea-bordered w-full max-w-xl"
-              placeholder="Numbers for sended"
+              placeholder="Numbers to receive messages"
               rows={6}
               onChange={(e) => handleChange(e)}
               name="numbers"

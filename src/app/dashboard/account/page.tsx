@@ -2,8 +2,8 @@
 import Image from "next/image";
 import TableComponent from "../../../components/tableComponent";
 import useAccount from "./useAccount";
-import ModalDelete from "./modal/ModalDelete";
 import LoadingModal from "@/components/modal/LoadingModal";
+import { ModalAdd, ModalDelete } from "./modal";
 
 export default function Account() {
   const {
@@ -14,6 +14,7 @@ export default function Account() {
     scan,
     dataDelete,
     deleteModal,
+    labelFormRef,
     setDeleteModal,
     handleResetScan,
     handleDeleteClick,
@@ -24,7 +25,11 @@ export default function Account() {
   return (
     <main className="py-8 flex flex-col gap-4 h-full">
       <div className="max-md:px-8">
-        <label htmlFor="form-modal" className="btn btn-success text-white">
+        <label
+          ref={labelFormRef}
+          htmlFor="form-modal"
+          className="btn btn-success text-white"
+        >
           Add Account
         </label>
       </div>
@@ -66,44 +71,13 @@ export default function Account() {
           Close
         </label>
       </div>
-      <input type="checkbox" id="form-modal" className="modal-toggle" />
-      <div className="modal" role="dialog">
-        <div className="modal-box flex flex-col items-center gap-4">
-          <h4 className="text-xl">Add Account</h4>
-          <div className="w-full max-w-xs flex flex-col gap-4">
-            <input
-              type="text"
-              placeholder="Name"
-              name="name"
-              className="input input-bordered w-full"
-              value={formData.name}
-              onChange={(e) => handleChange(e)}
-            />
-            <input
-              type="text"
-              placeholder="Phone Number"
-              className="input input-bordered w-full"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={(e) => handleChange(e)}
-            />
-            <button
-              className="btn btn-success text-white"
-              onClick={handleSubmit}
-            >
-              Save
-            </button>
-          </div>
-        </div>
-        <label
-          onClick={handleResetScan}
-          className="modal-backdrop"
-          htmlFor="form-modal"
-        >
-          Close
-        </label>
-      </div>
+
       {rows.isLoadingAction && <LoadingModal />}
+      <ModalAdd
+        formData={formData}
+        handleSubmit={handleSubmit}
+        onChange={handleChange}
+      />
       <ModalDelete
         onClick={() => dataDelete?.id && handleDeleteClick(dataDelete?.id)}
         dataDelete={dataDelete}

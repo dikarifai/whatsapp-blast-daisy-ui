@@ -72,10 +72,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className, setTitle }) => {
       ></div>
       <div
         className={`menu ${
-          isActive
-            ? "max-md:fixed top-0 left-0 w-full h-screen flex flex-col justify-between p-0 pb-8"
-            : "max-md:hidden"
-        } max-md:bg-green-500 z-50 max-md:w-4/6`}
+          isActive ? "max-md:fixed top-0 left-0 w-full " : "max-md:hidden"
+        } max-md:bg-green-500 z-50 max-md:w-4/6 flex flex-col justify-between h-screen p-0 pb-8`}
       >
         <div>
           <h2 className="text-2xl text-center w-full p-5 bg-green-200">

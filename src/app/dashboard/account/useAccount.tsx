@@ -11,7 +11,7 @@ import axiosInstance from "@/services/axiosInstance";
 import { AccountAddRequest, AccountTypes } from "@/types/accountTypes";
 import { ScanBlatsResponse } from "@/types/blastTypes";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface FormDataTypes {
   name: string;
@@ -33,6 +33,8 @@ const useAccount = () => {
   const [addModal, setAddModal] = useState<boolean>(false);
   const [scanModal, setScanModal] = useState<boolean>(false);
   const dispacth = useAppDispatch();
+  const labelFormRef = useRef<HTMLLabelElement>(null);
+  const labelDeleteRef = useRef<HTMLLabelElement>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -46,9 +48,14 @@ const useAccount = () => {
 
   const handleSubmit = async () => {
     try {
-      await dispacth(addAccount(formData));
-      setFormData(initialFormData);
-      await dispacth(getAccounts());
+      const resp = await dispacth(addAccount(formData));
+      if (addAccount.fulfilled.match(resp)) {
+        setFormData(initialFormData);
+        await dispacth(getAccounts());
+        if (labelFormRef.current) {
+          labelFormRef.current.click();
+        }
+      }
     } catch (error) {
       console.log("error: ", error);
     }
@@ -68,8 +75,11 @@ const useAccount = () => {
   };
 
   const handleDeleteClick = async (id: number) => {
-    await dispacth(deleteAccountById(id));
-    await dispacth(getAccounts());
+    const resp = await dispacth(deleteAccountById(id));
+    if (deleteAccountById.fulfilled.match(resp)) {
+      labelDeleteRef.current?.click();
+      await dispacth(getAccounts());
+    }
   };
 
   const handleResetScan = () => {
@@ -98,6 +108,7 @@ const useAccount = () => {
           </label>
           <label
             htmlFor="delete-modal"
+            ref={labelDeleteRef}
             onClick={() => handleDeleteModal(item)}
             className="btn bg-red-600 text-white"
           >
@@ -120,6 +131,7 @@ const useAccount = () => {
     scan,
     dataDelete,
     deleteModal,
+    labelFormRef,
     setDeleteModal,
     handleResetScan,
     handleDeleteClick,

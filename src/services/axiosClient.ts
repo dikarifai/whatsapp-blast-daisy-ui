@@ -1,3 +1,4 @@
+import { errorAlert } from "@/utils/alertUtil";
 import axios from "axios";
 
 const axiosClient = axios.create();
@@ -11,6 +12,7 @@ axiosClient.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // Redirect ke halaman login menggunakan Next.js useRouter
       console.log("error client: ", error.response.status);
+      errorAlert("Session was end");
       window.location.href = "/login";
     }
     return Promise.reject(error);
