@@ -40,6 +40,15 @@ const useAccount = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    if (name === "phoneNumber") {
+      if (/^\d*$/.test(value)) {
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: value,
+        }));
+      }
+      return;
+    }
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,

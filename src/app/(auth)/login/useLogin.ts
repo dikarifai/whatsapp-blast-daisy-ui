@@ -1,9 +1,8 @@
 import { login } from "@/lib/features/authSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import axiosInstance from "@/services/axiosInstance";
-import axios from "axios";
+import { errorAlert } from "@/utils/alertUtil";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const useLogin = () => {
   const dispatch = useAppDispatch();
@@ -37,6 +36,14 @@ const useLogin = () => {
       console.log("error", error);
     }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("sessionExpired") === "true") {
+      errorAlert("Session has expired. Please login again.");
+
+      localStorage.removeItem("sessionExpired");
+    }
+  }, []);
 
   return { username, password, setUsername, setPasword, handleLogin, auth };
 };

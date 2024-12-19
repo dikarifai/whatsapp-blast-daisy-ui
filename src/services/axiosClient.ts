@@ -11,8 +11,7 @@ axiosClient.interceptors.response.use(
     // Tangani error response, misalnya untuk logout jika token kadaluarsa
     if (error.response && error.response.status === 401) {
       // Redirect ke halaman login menggunakan Next.js useRouter
-      console.log("error client: ", error.response.status);
-      errorAlert("Session was end");
+      localStorage.setItem("sessionExpired", "true");
       window.location.href = "/login";
     }
     return Promise.reject(error);

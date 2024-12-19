@@ -1,8 +1,7 @@
+import axiosClient from "@/services/axiosClient";
 import { ScanBlatsResponse } from "@/types/blastTypes";
 import { errorAlert, successAlert } from "@/utils/alertUtil";
-import { textAreaSplitUtil } from "@/utils/textAreaSplitUtil";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 import Swal from "sweetalert2";
 
 interface SendMessageTypes {
@@ -17,7 +16,7 @@ export const scanBlast = createAsyncThunk(
   "blast/scanBlast",
   async (number: string) => {
     try {
-      const response = await axios.post("/api/blast/scan", {
+      const response = await axiosClient.post("/api/blast/scan", {
         number: number,
       });
 
@@ -30,7 +29,7 @@ export const sendMessage = createAsyncThunk(
   "blast/sendMessage",
   async (data: FormData, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/blast/send-message", data);
+      const response = await axiosClient.post("/api/blast/send-message", data);
       return response.data;
     } catch (error: any) {
       if (!error.response) {
@@ -46,7 +45,7 @@ export const blastMessage = createAsyncThunk(
   "blast/blastMessage",
   async (data: FormData, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/blast/blast-message", data);
+      const response = await axiosClient.post("/api/blast/blast-message", data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);

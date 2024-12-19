@@ -68,7 +68,11 @@ export const ModalAdd: React.FC<ModalAddProps> = ({
             value={formData.phoneNumber}
             onChange={(e) => onChange(e)}
           />
-          <button className="btn btn-success text-white" onClick={handleSubmit}>
+          <button
+            className="btn btn-success text-white"
+            onClick={handleSubmit}
+            disabled={!formData.name.trim() || !formData.phoneNumber.trim()}
+          >
             Save
           </button>
         </div>

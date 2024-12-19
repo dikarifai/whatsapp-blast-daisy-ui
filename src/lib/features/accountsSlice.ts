@@ -1,3 +1,4 @@
+import axiosClient from "@/services/axiosClient";
 import { AccountAddRequest, AccountTypes } from "@/types/accountTypes";
 import { errorAlert, successAlert } from "@/utils/alertUtil";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -12,7 +13,7 @@ interface GetAccountsParams {
 export const getAccounts = createAsyncThunk(
   "accounts/getAccounts",
   async (params: GetAccountsParams | undefined) => {
-    const response = await axios.get("/api/accounts", {
+    const response = await axiosClient.get("/api/accounts", {
       params: params,
     });
     return response.data.data;
@@ -22,7 +23,7 @@ export const addAccount = createAsyncThunk(
   "accounts/addAccount",
   async (data: AccountAddRequest, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/accounts", data);
+      const response = await axiosClient.post("/api/accounts", data);
       return response.data.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -34,7 +35,7 @@ export const deleteAccountById = createAsyncThunk(
   "accounts/deleteAccountById",
   async (id: number, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`/api/accounts/${id}`);
+      const response = await axiosClient.delete(`/api/accounts/${id}`);
       return response.data.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
