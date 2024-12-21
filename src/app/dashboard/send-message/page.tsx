@@ -46,7 +46,7 @@ const SendMessage: React.FC = () => {
             <option value="" disabled>
               Pick a number for sending
             </option>
-            {accounts.data.map((account) => (
+            {accounts.data?.map((account) => (
               <option key={account.id} value={account.phoneNumber}>
                 {`${account.phoneNumber} ${account.name}`}
               </option>

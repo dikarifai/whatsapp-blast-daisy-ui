@@ -9,19 +9,18 @@ import axios from "axios";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { logout } from "@/lib/features/authSlice";
 import LoadingModal from "../modal/LoadingModal";
+import { setTitle } from "@/lib/features/headerSlice";
 
 interface SidebarProps {
   className?: React.HTMLElementType | string;
-  setTitle?: Dispatch<SetStateAction<string>>;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ className, setTitle }) => {
+const Sidebar: React.FC<SidebarProps> = ({ className }) => {
+  const { sidebarItems, handleClickNav } = useSidebar();
   const dispatch = useAppDispatch();
   const auth = useAppSelector((item) => item.auth);
-  const { sidebarItems } = useSidebar();
   const router = useRouter();
   const pathname = usePathname();
-  const [index, setIndex] = useState<number>();
   const [isActive, setIsActive] = useState<boolean>(false);
 
   const handleLogout = async () => {
@@ -36,16 +35,14 @@ const Sidebar: React.FC<SidebarProps> = ({ className, setTitle }) => {
       pathnameSplit.length === 2 ? pathnameSplit[0] : pathnameSplit[2];
     console.log("Split: ", pathnameFix);
 
-    if (setTitle) {
-      const index = sidebarItems.findIndex(
-        (item) => item.path.split("/")[1] === pathnameFix
-      );
-      console.log(pathname.split("/"));
+    const index = sidebarItems.findIndex(
+      (item) => item.path.split("/")[1] === pathnameFix
+    );
+    console.log(pathname.split("/"));
 
-      console.log("Index: ", index);
+    console.log("Index: ", index);
 
-      setTitle(sidebarItems[index]?.name);
-    }
+    dispatch(setTitle(sidebarItems[index]?.name));
   }, []);
 
   useEffect(() => {
@@ -84,7 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className, setTitle }) => {
             {sidebarItems.map((item) => (
               <li className="text-xl" key={item.key}>
                 <Link
-                  onClick={() => setTitle && setTitle(item.name)}
+                  onClick={() => handleClickNav(item.name)}
                   href={`/dashboard/${item.path}`}
                 >
                   {item.name}
