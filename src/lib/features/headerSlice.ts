@@ -28,10 +28,10 @@ export const getProfile = createAsyncThunk(
   "profile/getProfile",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosClient.get("/api/users/me");
+      const response = await axiosClient.get("/users/me");
       return response.data.data;
-    } catch (error) {
-      rejectWithValue(error);
+    } catch (error: any) {
+      rejectWithValue(error.response.data);
     }
   }
 );

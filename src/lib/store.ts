@@ -3,6 +3,7 @@ import accountsReducer from "./features/accountsSlice";
 import blastReducer from "./features/blastSlice";
 import authReducer from "./features/authSlice";
 import headerReducer from "./features/headerSlice";
+import dashboardReducer from "./features/dashboardSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -11,6 +12,7 @@ export const makeStore = () => {
       blast: blastReducer,
       auth: authReducer,
       header: headerReducer,
+      dashboard: dashboardReducer,
     },
   });
 };

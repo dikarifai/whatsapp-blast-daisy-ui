@@ -56,17 +56,13 @@ const useAccount = () => {
   };
 
   const handleSubmit = async () => {
-    try {
-      const resp = await dispacth(addAccount(formData));
-      if (addAccount.fulfilled.match(resp)) {
-        setFormData(initialFormData);
-        await dispacth(getAccounts());
-        if (labelFormRef.current) {
-          labelFormRef.current.click();
-        }
+    const resp = await dispacth(addAccount(formData));
+    if (addAccount.fulfilled.match(resp)) {
+      setFormData(initialFormData);
+      await dispacth(getAccounts());
+      if (labelFormRef.current) {
+        labelFormRef.current.click();
       }
-    } catch (error) {
-      console.log("error: ", error);
     }
   };
 

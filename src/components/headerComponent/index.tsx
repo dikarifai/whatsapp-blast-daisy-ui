@@ -8,8 +8,8 @@ import { useEffect } from "react";
 const HeaderComponent: React.FC = () => {
   const dispatch = useAppDispatch();
   const header = useAppSelector((state) => state.header);
-  const name = header.data.profile.name;
-  const title = header.data.title;
+  const name = header.data?.profile?.name;
+  const title = header.data?.title;
 
   useEffect(() => {
     dispatch(getProfile());

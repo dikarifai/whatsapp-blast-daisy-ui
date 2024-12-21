@@ -13,7 +13,7 @@ interface GetAccountsParams {
 export const getAccounts = createAsyncThunk(
   "accounts/getAccounts",
   async (params: GetAccountsParams | undefined) => {
-    const response = await axiosClient.get("/api/accounts", {
+    const response = await axiosClient.get("/accounts", {
       params: params,
     });
     return response.data.data;
@@ -23,7 +23,8 @@ export const addAccount = createAsyncThunk(
   "accounts/addAccount",
   async (data: AccountAddRequest, { rejectWithValue }) => {
     try {
-      const response = await axiosClient.post("/api/accounts", data);
+      console.log("trigger");
+      const response = await axiosClient.post("/accounts", data);
       return response.data.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -35,7 +36,7 @@ export const deleteAccountById = createAsyncThunk(
   "accounts/deleteAccountById",
   async (id: number, { rejectWithValue }) => {
     try {
-      const response = await axiosClient.delete(`/api/accounts/${id}`);
+      const response = await axiosClient.delete(`/accounts/${id}`);
       return response.data.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -77,6 +78,7 @@ export const accountsSlice = createSlice({
     builder.addCase(addAccount.rejected, (state, action) => {
       const payload: any = action.payload;
       state.isLoadingAction = false;
+      console.log(payload.data.message);
       errorAlert(payload.data.message);
     });
     //DELETE Account BY ID

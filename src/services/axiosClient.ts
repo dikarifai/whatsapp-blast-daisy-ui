@@ -1,7 +1,28 @@
 import { errorAlert } from "@/utils/alertUtil";
 import axios from "axios";
+import Cookies from "js-cookie";
 
-const axiosClient = axios.create();
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+const axiosClient = axios.create({
+  baseURL: baseUrl,
+});
+
+axiosClient.interceptors.request.use(
+  async (config) => {
+    const token = Cookies.get("token");
+
+    if (token) {
+      {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error) => {
+    // Do something with request error
+    return Promise.reject(error);
+  }
+);
 
 axiosClient.interceptors.response.use(
   (response) => {
@@ -12,7 +33,8 @@ axiosClient.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // Redirect ke halaman login menggunakan Next.js useRouter
       localStorage.setItem("sessionExpired", "true");
-      window.location.href = "/login";
+      Cookies.remove("token");
+      // window.location.href = "/login";
     }
     return Promise.reject(error);
   }
