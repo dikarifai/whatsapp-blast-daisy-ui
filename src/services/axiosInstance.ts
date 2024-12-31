@@ -1,9 +1,7 @@
 import axios from "axios";
-import { cookies } from "next/headers";
+import Cookies from "js-cookie";
 
-import { NextResponse } from "next/server";
-
-const baseUrl = process.env.API_URL;
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,
@@ -11,8 +9,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const cookie = await cookies();
-    const token = cookie.get("token")?.value;
+    const token = Cookies.get("token");
 
     if (token) {
       {
@@ -33,6 +30,13 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     // Tangani error response, misalnya untuk logout jika token kadaluarsa
+
+    if (error.response && error.response.status === 401) {
+      // Redirect ke halaman login menggunakan Next.js useRouter
+      localStorage.setItem("sessionExpired", "true");
+      Cookies.remove("token");
+      window.location.href = "/login";
+    }
 
     return Promise.reject(error);
   }

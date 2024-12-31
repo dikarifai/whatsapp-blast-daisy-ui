@@ -1,4 +1,4 @@
-import axiosClient from "@/services/axiosClient";
+import axiosInstance from "@/services/axiosInstance";
 import { errorAlert } from "@/utils/alertUtil";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
@@ -15,7 +15,7 @@ export const getDashbord = createAsyncThunk(
   "dashboard/getDashboard",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosClient.get("/dashboard");
+      const response = await axiosInstance.get("/dashboard");
 
       return response.data.data;
     } catch (error: any) {

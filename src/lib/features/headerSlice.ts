@@ -1,4 +1,4 @@
-import axiosClient from "@/services/axiosClient";
+import axiosInstance from "@/services/axiosInstance";
 import { errorAlert } from "@/utils/alertUtil";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
@@ -28,7 +28,7 @@ export const getProfile = createAsyncThunk(
   "profile/getProfile",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosClient.get("/users/me");
+      const response = await axiosInstance.get("/users/me");
       return response.data.data;
     } catch (error: any) {
       rejectWithValue(error.response.data);
@@ -54,7 +54,7 @@ export const headerSlice = createSlice({
     });
     builder.addCase(getProfile.rejected, (state, action: any) => {
       state.isLoading = false;
-      errorAlert(action.payload.message);
+      errorAlert(action.payload?.message);
     });
   },
 });

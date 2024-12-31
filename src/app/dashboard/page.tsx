@@ -17,9 +17,9 @@ export default function Home() {
 
   return (
     <main className="pt-4 grid-cols-2 grid xl:grid-cols-3 place-items-center gap-y-6">
-      <CardComponent icon={FaWhatsapp} count={dashboard.data.account} />
-      <CardComponent icon={FaMessage} count={dashboard.data.messageLog} />
-      <CardComponent icon={FaUser} count={dashboard.data.user} />
+      <CardComponent icon={FaWhatsapp} count={dashboard.data?.account} />
+      <CardComponent icon={FaMessage} count={dashboard.data?.messageLog} />
+      <CardComponent icon={FaUser} count={dashboard.data?.user} />
     </main>
   );
 }

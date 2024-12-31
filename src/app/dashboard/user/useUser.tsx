@@ -5,7 +5,7 @@ const useUser = () => {
   const [rows, setRows] = useState<any>();
   const getUser = async () => {
     try {
-      const response = await axios.get("/api/users");
+      const response = await axios.get("/users");
 
       const data = response.data.data;
 

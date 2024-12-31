@@ -2,7 +2,6 @@
 
 import { getProfile } from "@/lib/features/headerSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import axiosClient from "@/services/axiosClient";
 import { useEffect } from "react";
 
 const HeaderComponent: React.FC = () => {

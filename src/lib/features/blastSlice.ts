@@ -1,4 +1,4 @@
-import axiosClient from "@/services/axiosClient";
+import axiosInstance from "@/services/axiosInstance";
 import { ScanBlatsResponse } from "@/types/blastTypes";
 import { errorAlert, successAlert } from "@/utils/alertUtil";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
@@ -16,7 +16,7 @@ export const scanBlast = createAsyncThunk(
   "blast/scanBlast",
   async (number: string) => {
     try {
-      const response = await axiosClient.post("/api/blast/scan", {
+      const response = await axiosInstance.post("/blast/scan", {
         number: number,
       });
 
@@ -29,11 +29,11 @@ export const sendMessage = createAsyncThunk(
   "blast/sendMessage",
   async (data: FormData, { rejectWithValue }) => {
     try {
-      const response = await axiosClient.post("/api/blast/send-message", data);
+      const response = await axiosInstance.post("/blast/send-message", data);
       return response.data;
     } catch (error: any) {
       if (!error.response) {
-        throw error;
+        return rejectWithValue(error);
       }
 
       return rejectWithValue(error.response.data);
@@ -45,7 +45,7 @@ export const blastMessage = createAsyncThunk(
   "blast/blastMessage",
   async (data: FormData, { rejectWithValue }) => {
     try {
-      const response = await axiosClient.post("/api/blast/blast-message", data);
+      const response = await axiosInstance.post("/blast/blast-message", data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -113,14 +113,9 @@ export const blastSlice = createSlice({
     });
     builder.addCase(sendMessage.rejected, (state, action) => {
       const payload: any = action.payload;
+      console.log(payload);
 
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: payload.data.message,
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      errorAlert(payload.message);
 
       state.isLoadingAction = false;
     });
@@ -138,7 +133,7 @@ export const blastSlice = createSlice({
     builder.addCase(blastMessage.rejected, (state, action) => {
       const payload: any = action.payload;
 
-      errorAlert(payload.data.message);
+      errorAlert(payload.data?.message || "");
 
       state.isLoadingAction = false;
     });

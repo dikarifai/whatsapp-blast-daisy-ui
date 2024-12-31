@@ -57,18 +57,16 @@ const useSendMessage = () => {
     form.append("account", sendForm.account);
     form.append("message", sendForm.message);
     inputFile && form.append("image", inputFile);
-    try {
-      if (radioValue === "send") {
-        form.append("number", sendForm.number);
-        dispatch(sendMessage(form));
-      } else {
-        form.append("numbers", sendForm.numbers);
-        dispatch(blastMessage(form));
-      }
-      setInputFile(undefined);
-    } catch (error) {
-      console.log("error send: ", error);
+    if (radioValue === "send") {
+      form.append("number", sendForm.number);
+      console.log("form", form);
+
+      dispatch(sendMessage(form));
+    } else {
+      form.append("numbers", sendForm.numbers);
+      dispatch(blastMessage(form));
     }
+    setInputFile(undefined);
   };
 
   useEffect(() => {
